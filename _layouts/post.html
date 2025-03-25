@@ -1,0 +1,140 @@
+---
+layout: default
+---
+
+<div class="card shadow-sm mb-2">
+  <div class="card-body">
+
+    {% if page.game_name or page.game_type %}
+<!-- App-Installationsbereich -->
+<div class="d-flex align-items-center mb-3 p-2 border rounded" style="background-color: #f8f9fa;">
+  <img src="/assets/icons/icon-512x512.png" alt="{{ page.game_name | default: 'App' }} Logo" class="mr-2" style="max-width: 40px;">
+  <div class="flex-grow-1">
+    <span class="font-weight-bold mb-0">{{ page.game_name | default: page.title | default: 'Unbekanntes Spiel' }} {{ page.game_type | default: '' }}</span>
+  </div>
+  <div class="ml-auto">
+    <button id="install-button" class="btn btn-primary btn-sm">Installieren</button>
+  </div>
+</div>
+{% endif %}
+
+    <p class="card-subtitle text-muted mb-3">
+      Von <strong>{{ page.author | default: 'BonusCollector' }}</strong> |
+      {% assign include_file = page.include_file %}
+      {% assign file_info = site.data.include_files[include_file] %}
+      {% if file_info and file_info.last_modified %}
+        Zuletzt aktualisiert: <time datetime="{{ file_info.last_modified | date_to_xmlschema }}" class="timeago">{{ file_info.last_modified }}</time>
+      {% else %}
+        Zuletzt aktualisiert: <time datetime="{{ page.last_modified_at | default: site.time | date_to_xmlschema }}" class="timeago">{{ page.last_modified_at | default: site.time }}</time>
+      {% endif %}
+    </p>
+
+    <div class="card-text">{{ content }}</div>
+
+    {% if page.tags %}
+      <div class="tags mt-3">
+        <span class="badge badge-primary">Tags:</span>
+        {% for tag in page.tags %}
+          <a href="{{ site.baseurl }}/tag/{{ tag | replace: ' ', '-' }}/" class="badge badge-secondary">{{ tag }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="social-share mt-4">
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ site.url }}{{ page.url }}" target="_blank" class="btn btn-primary mb-2 me-2">
+        <i class="bi bi-facebook"></i> Auf Facebook teilen
+      </a>
+      <a href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}" target="_blank" class="btn btn-info mb-2 me-2">
+        <i class="bi bi-twitter"></i> Twittern
+      </a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{ page.title }}" target="_blank" class="btn btn-primary mb-2 me-2">
+        <i class="bi bi-linkedin"></i> Auf LinkedIn teilen
+      </a>
+      <a href="https://reddit.com/submit?url={{ site.url }}{{ page.url }}&title={{ page.title }}" target="_blank" class="btn btn-danger mb-2 me-2">
+        <i class="bi bi-reddit"></i> Auf Reddit teilen
+      </a>
+      <a href="https://api.whatsapp.com/send?text={{ page.title }} {{ site.url }}{{ page.url }}" target="_blank" class="btn btn-success mb-3 me-2">
+        <i class="bi bi-whatsapp"></i> Auf WhatsApp teilen
+      </a>
+    </div>
+
+    <!-- Suchabschnitt -->
+    <h2>Alle Spiele</h2>
+    <div class="container mt-4">
+      <div class="input-group">
+        <input type="search" id="search-input" class="form-control" placeholder="Nach Spielen suchen..." aria-label="Suche">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" id="search-button">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div id="results-container" class="mt-4"></div>
+    </div>
+    <script>
+      const searchInput = document.getElementById('search-input');
+      const resultsContainer = document.getElementById('results-container');
+      const searchButton = document.getElementById('search-button');
+
+      function performSearch(query) {
+        fetch('{{ site.baseurl }}/search.json')
+          .then(response => response.json())
+          .then(data => {
+            const results = data.filter(post => post.content.includes(query));
+            resultsContainer.innerHTML = results.length > 0
+              ? results.map(result => `<div><a href="${result.url}">${result.title}</a></div>`).join('')
+              : 'Keine Ergebnisse gefunden';
+          });
+      }
+
+      searchButton.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) performSearch(query);
+      });
+
+      searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          const query = searchInput.value.trim();
+          if (query) performSearch(query);
+        }
+      });
+    </script>
+
+    <!-- Alle Beiträge auflisten -->
+    <ul class="list-group fixed-height-scroll">
+      {% assign sorted_posts = site.posts | sort: 'title' %}
+      {% for post in sorted_posts %}
+        <li class="list-group-item d-flex align-items-center">
+          <img src="{{ post.image | default: '/assets/images/default.webp' | relative_url }}" alt="{{ post.game_name }} {{ post.game_type }}" class="list-group-item-image mr-2" style="max-width: 40px; max-height: 40px;"/>
+          <a href="{{ post.url | relative_url }}">{{ post.game_name }} {{ post.game_type }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Installationsbutton-Logik -->
+    <script>
+      let deferredPrompt;
+      const installButton = document.getElementById('install-button');
+      installButton.style.display = 'none'; // Button anfangs ausblenden
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installButton.style.display = 'block'; // Button anzeigen
+
+        installButton.addEventListener('click', () => {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('Benutzer hat die A2HS-Eingabeaufforderung akzeptiert');
+            } else {
+              console.log('Benutzer hat die A2HS-Eingabeaufforderung abgelehnt');
+            }
+            deferredPrompt = null;
+          });
+        });
+      });
+    </script>
+
+  </div>
+</div>

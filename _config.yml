@@ -1,0 +1,42 @@
+title: "BonusCollector"
+description: "Deine ultimative Quelle für tägliche Gratis-Belohnungen wie Spins, Chips und Credits für deine Lieblingsspiele – 100% sicher und kostenlos!"
+baseurl: ""
+url: "https://bonuscollector.de"
+locale: "de"
+
+markdown: kramdown
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-last-modified-at
+  - jekyll-redirect-from
+
+collections:
+  pages:
+    output: true
+
+permalink: pretty
+
+# SEO and Social Media Settings
+google_analytics: G-BNX1BVWWSF
+
+# Default Front Matter for Pages
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      author: "BonusCollector"
+      image: "/assets/images/default.webp"
+      game_name: "BonusCollector"
+      game_type: "Gratis Belohnungen"
+
+# Exclude Files
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - package.json
+  - package-lock.json

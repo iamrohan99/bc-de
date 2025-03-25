@@ -1,0 +1,196 @@
+name: Update Links and Deployment
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # Runs every 30 minutes
+  push:
+    branches:
+      - main
+
+jobs:
+  update-links:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        game:
+          - coin-master
+          - monopoly-go
+          - bingo-blitz
+          - dice-dreams
+          - match-masters
+          - solitaire-grand-harvest
+          - slotpark
+          - house-of-fun
+          - slotomania
+          - bingo-bash
+          - huuuge-casino
+          - wsop
+          - crazy-coin
+          - gametwist
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers (only for crazy-coin)
+        if: matrix.game == 'crazy-coin'
+        run: npx playwright install --with-deps
+
+      - name: Capture pre-update content of HTML file
+        run: |
+          HTML_FILE="_includes/${{ matrix.game }}.html"
+          if [ -f "$HTML_FILE" ]; then
+            cp "$HTML_FILE" "${HTML_FILE}.pre"
+            echo "Captured pre-update content of $HTML_FILE:"
+            cat "$HTML_FILE" || echo "No pre-update content found"
+          else
+            echo "No pre-update file exists for $HTML_FILE"
+            touch "${HTML_FILE}.pre"
+          fi
+
+      - name: Fetch and update links
+        run: |
+          mkdir -p logs # Ensure logs directory exists
+          node index-js/${{ matrix.game }}.js > logs/${{ matrix.game }}.log 2>&1 || echo "Script failed but continuing"
+          echo "Contents of links-json/${{ matrix.game }}.json:"
+          cat links-json/${{ matrix.game }}.json || echo "No links JSON found"
+          echo "Contents of _includes/${{ matrix.game }}.html:"
+          cat _includes/${{ matrix.game }}.html || echo "No HTML include found"
+
+      - name: Verify JSON integrity
+        run: |
+          if ! jq empty links-json/${{ matrix.game }}.json; then
+            echo "Invalid JSON detected in links-json/${{ matrix.game }}.json"
+            exit 1
+          fi
+
+      - name: Generate dynamic content
+        shell: bash
+        run: |
+          declare -A GAME_TYPES
+          GAME_TYPES=(
+            ["bingo-bash"]="Gratis Chips"
+            ["bingo-blitz"]="Gratis Credits"
+            ["coin-master"]="Gratis Spins"
+            ["crazy-coin"]="Gratis Spins"
+            ["dice-dreams"]="Gratis Würfe"
+            ["gametwist"]="Gratis Münzen"
+            ["house-of-fun"]="Gratis Münzen"
+            ["huuuge-casino"]="Gratis Chips"
+            ["match-masters"]="Gratis Geschenke"
+            ["monopoly-go"]="Würfel"
+            ["slotomania"]="Gratis Münzen"
+            ["slotpark"]="Bonuscode"
+            ["solitaire-grand-harvest"]="Gratis Münzen"
+            ["wsop"]="Gratis Chips"
+          )
+
+          GAME_NAME=${{ matrix.game }}
+          GAME_NAME_CAPITALIZED=$(echo "$GAME_NAME" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+          GAME_TYPE=${GAME_TYPES[$GAME_NAME]}
+          CURRENT_DATE=$(TZ=America/Los_Angeles date +'%d.%m.%Y') # Date only for content
+
+          POST_FILE="_includes/${GAME_NAME}_post.html"
+          FOOTER_FILE="_includes/${GAME_NAME}_footer.html"
+
+          # Updated H1 for better SEO
+          POST_CONTENT="# Tägliche ${GAME_NAME_CAPITALIZED} Gratis ${GAME_TYPE} – Jetzt Sammeln!\n\nWillkommen bei deiner Quelle für **${GAME_NAME_CAPITALIZED} Gratis ${GAME_TYPE}**! Hier findest du täglich neue Links, um kostenlose ${GAME_TYPE} und Belohnungen zu sammeln – perfekt für deutsche Spieler.\n\n---\n\nBist du ein leidenschaftlicher **${GAME_NAME_CAPITALIZED}**-Spieler? Hier findest du täglich neue **Gratis ${GAME_TYPE}**-Links, um kostenlose Belohnungen zu sammeln – 100% sicher und gratis!\n\nKlicke einfach auf die Links unten, melde dich in deinem **${GAME_NAME_CAPITALIZED}**-Konto an und sichere dir deine **Gratis ${GAME_TYPE}** – sie sind sofort im Spiel verfügbar. Schau täglich vorbei, da die Links schnell ablaufen!\n\n---\n\n## Aktuelle ${GAME_NAME_CAPITALIZED} ${GAME_TYPE} Links"
+
+          # Updated FOOTER_CONTENT with new section and internal links, time removed from Stand
+          FOOTER_CONTENT="---\n\n## Was sind ${GAME_TYPE}-Links?\n\n**${GAME_TYPE}**-Links sind offizielle Belohnungen von den **${GAME_NAME_CAPITALIZED}**-Entwicklern. Sie bieten kostenlose **${GAME_TYPE}** wie Spins, Würfe, Credits oder spezielle Geschenke. Wir sammeln und prüfen diese Links täglich, damit du sie mühelos einlösen kannst.\n\n---\n\n## Warum diese Seite dein ${GAME_NAME_CAPITALIZED}-Begleiter ist\n\nWir helfen dir, in **${GAME_NAME_CAPITALIZED}** vorne zu bleiben:\n\n- **Tägliche Updates:** Neue **${GAME_TYPE}**-Links jeden Tag (Stand: ${CURRENT_DATE}).\n- **100 % sicher:** Links direkt aus offiziellen **${GAME_NAME_CAPITALIZED}**-Quellen.\n- **Kostenlos:** Keine Gebühren, keine Anmeldung – nur Belohnungen!\n\n---\n\n## Wie Man ${GAME_NAME_CAPITALIZED} ${GAME_TYPE} Optimal Nutzt\n\nUm das Beste aus deinen Gratis ${GAME_TYPE} herauszuholen, solltest du strategisch vorgehen. Nutze deine ${GAME_TYPE} während Events wie \"Viking Quest\" oder \"Spin Master\", um höhere Belohnungen zu erzielen. Sammle Münzen, um dein Dorf auszubauen, aber achte darauf, nicht zu viele Münzen zu horten – das macht dich anfälliger für Angriffe. Plane deine ${GAME_TYPE} für Tage, an denen du mehr Zeit hast, um aktiv zu spielen. So maximierst du deinen Fortschritt und genießt ${GAME_NAME_CAPITALIZED} noch mehr!\n\n---\n\n## Profi-Tipps für mehr ${GAME_TYPE}\n\nMaximiere deine Gratis-Belohnungen mit diesen Tricks:\n\n### Spins & Würfe sparen\nNutze sie bei Events mit hohen Gewinnen.\n\n### Münzen strategisch einsetzen\nInvestiere klug, um schneller voranzukommen.\n\n### Täglich checken\nLinks sind kurzlebig – sei schnell!\n\n---\n\n## Häufige Fragen zu ${GAME_TYPE}\n\n### Sind diese ${GAME_TYPE}-Links sicher?\n\nJa! Wir teilen ausschließlich Links, die direkt aus offiziellen **${GAME_NAME_CAPITALIZED}**-Aktionen stammen – sie sind völlig sicher und legitim.\n\n### Wie oft werden die Links aktualisiert?\n\nTäglich! Besuche uns regelmäßig für frische **${GAME_TYPE}**.\n\n### Was wenn ein Link nicht funktioniert?\n\nEinige Links haben eine begrenzte Anzahl an Einlösungen oder laufen schnell ab. Falls einer nicht funktioniert, keine Sorge – neue werden bald verfügbar sein!\n\n---\n\n## Entdecke Mehr Gratis-Links\n\n- [Bingo Bash Gratis Chips](/bingo-bash-gratis-chips/)\n- [Slotomania Gratis Münzen](/slotomania-gratis-muenzen/)\n\n---\n\n## Haftungsausschluss\n\nWir sind **nicht mit ${GAME_NAME_CAPITALIZED}** oder seinen Entwicklern verbunden. Diese Seite hilft Spielern, kostenlose **${GAME_TYPE}** zu finden und das Spiel zu genießen."
+
+          # Write content to files
+          echo -e "$POST_CONTENT" > "$POST_FILE"
+          echo -e "$FOOTER_CONTENT" > "$FOOTER_FILE"
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.44.1/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Update last_modified in include_files.yml
+        run: |
+          # Current timestamp in UTC ISO format (e.g., 2025-03-15T18:40:00Z)
+          CURRENT_TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+          # File to update
+          INCLUDE_FILES="_data/include_files.yml"
+
+          # Ensure the include_files.yml exists
+          if [ ! -f "$INCLUDE_FILES" ]; then
+            echo "Creating $INCLUDE_FILES as it does not exist."
+            mkdir -p _data
+            echo "{}" > $INCLUDE_FILES
+          fi
+
+          # Compare pre-update and post-update content of _includes/[game].html
+          HTML_FILE="_includes/${{ matrix.game }}.html"
+          PRE_UPDATE_FILE="${HTML_FILE}.pre"
+          if [ -f "$HTML_FILE" ]; then
+            CURRENT_HTML_CONTENT=$(cat "$HTML_FILE" || echo "")
+            PRE_UPDATE_CONTENT=$(cat "$PRE_UPDATE_FILE" || echo "")
+            if [ "$CURRENT_HTML_CONTENT" != "$PRE_UPDATE_CONTENT" ]; then
+              echo "Reward links changed for ${{ matrix.game }}. Updating last_modified in $INCLUDE_FILES to $CURRENT_TIMESTAMP."
+              if command -v yq >/dev/null 2>&1; then
+                # Check if the key exists, create it if not
+                if ! yq e ".[\"${{ matrix.game }}.html\"]" $INCLUDE_FILES > /dev/null 2>&1; then
+                  yq e -i ". += {\"${{ matrix.game }}.html\": {\"last_modified\": \"$CURRENT_TIMESTAMP\"}}" $INCLUDE_FILES
+                else
+                  yq e -i ".[\"${{ matrix.game }}.html\"].last_modified = \"$CURRENT_TIMESTAMP\"" $INCLUDE_FILES
+                fi
+              else
+                # Fallback to sed if yq is not available
+                if grep -q "${{ matrix.game }}.html:" $INCLUDE_FILES; then
+                  sed -i "s/\(${{ matrix.game }}.html:\s*last_modified: \).*/\1$CURRENT_TIMESTAMP/" $INCLUDE_FILES
+                else
+                  echo "${{ matrix.game }}.html:" >> $INCLUDE_FILES
+                  echo "  last_modified: $CURRENT_TIMESTAMP" >> $INCLUDE_FILES
+                fi
+              fi
+            else
+              echo "No changes in reward links for ${{ matrix.game }}. Skipping last_modified update."
+            fi
+          else
+            echo "No HTML file found for ${{ matrix.game }}. Skipping last_modified update."
+          fi
+
+          # Clean up temporary pre-update file
+          rm -f "$PRE_UPDATE_FILE"
+
+          echo "Updated content of $INCLUDE_FILES:"
+          cat $INCLUDE_FILES
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "prolladmail@gmail.com"
+          git config --global user.name "Prollad99"
+
+      - name: Commit and push changes
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        run: |
+          git add _includes/${{ matrix.game }}.html _includes/${{ matrix.game }}_post.html _includes/${{ matrix.game }}_footer.html links-json/${{ matrix.game }}.json logs/${{ matrix.game }}.log _data/include_files.yml
+          if git diff --staged --quiet; then
+            echo "No changes to commit for ${GAME_NAME}"
+          else
+            git commit -m "Update ${GAME_NAME} links, content, and last_modified - $(date '+%Y-%m-%d %H:%M')"
+            for i in {1..5}; do
+              git pull --rebase && git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/Prollad99/bs-de.git && break
+              echo "Attempt $i: Push failed, retrying in 5 seconds..."
+              sleep 5
+            done || echo "❌ All push attempts failed for ${GAME_NAME}"
+          fi

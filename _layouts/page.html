@@ -1,0 +1,21 @@
+---
+layout: default
+---
+
+<div class="card shadow-sm mb-2">
+  <div class="card-body">
+    <h1 class="card-title mb-4">{{ page.title }}</h1>
+
+    <!-- Autor und zuletzt aktualisiertes Datum -->
+    <p class="card-subtitle text-muted mb-3">
+      Von <strong>{{ page.author | default: 'BonusCollector' }}</strong> |
+      {% if page.include_file and site.data.include_files[page.include_file] and site.data.include_files[page.include_file].last_modified %}
+        Zuletzt aktualisiert: <time datetime="{{ site.data.include_files[page.include_file].last_modified | date_to_xmlschema }}" class="timeago">{{ site.data.include_files[page.include_file].last_modified }}</time>
+      {% else %}
+        Zuletzt aktualisiert: <time datetime="{{ page.last_modified_at | default: site.time | date_to_xmlschema }}" class="timeago">{{ page.last_modified_at | default: site.time }}</time>
+      {% endif %}
+    </p>
+
+    <div class="card-text">{{ content }}</div>
+  </div>
+</div>
