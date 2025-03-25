@@ -2,7 +2,7 @@ name: Update Links and Deployment
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # Runs every 30 minutes
+    - cron: '0 * * * *' # Runs every hour at the start of the hour
   push:
     branches:
       - main
@@ -189,7 +189,7 @@ jobs:
           else
             git commit -m "Update ${GAME_NAME} links, content, and last_modified - $(date '+%Y-%m-%d %H:%M')"
             for i in {1..5}; do
-              git pull --rebase && git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/Prollad99/bs-de.git && break
+              git pull --rebase && git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/iamrohan99/bc-de.git && break
               echo "Attempt $i: Push failed, retrying in 5 seconds..."
               sleep 5
             done || echo "❌ All push attempts failed for ${GAME_NAME}"
