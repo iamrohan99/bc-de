@@ -176,8 +176,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "prolladmail@gmail.com"
-          git config --global user.name "Prollad99"
+          git config --global user.email "rohan735234@gmail.com"
+          git config --global user.name "iamrohan99"
 
       - name: Commit and push changes
         env:
