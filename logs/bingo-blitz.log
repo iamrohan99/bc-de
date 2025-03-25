@@ -1,4 +1,5 @@
 Final links: [
+  { href: 'https://d10x.co/BingoBlitz/PiYAl', date: '2025-03-25' },
   { href: 'https://d10x.co/BingoBlitz/7zuu9', date: '2025-03-25' },
   { href: 'https://d10x.co/BingoBlitz/Zaka0', date: '2025-03-25' },
   { href: 'https://d10x.co/BingoBlitz/FfrV7', date: '2025-03-25' },
@@ -223,7 +224,6 @@ Final links: [
   {
     href: 'https://bingo-app-dsa.playtika.com/bingo2-v2-bingoblitz/incentive/?incentive=f1df53e540bf70281952c56487b06a1fd637d6dae71bc8a112576830ef6fa500&desktop=fb&scene=popup&asset=inbox.PopupGiftCenter&originId=45889&gameref=FBS_140225',
     date: '2025-02-14'
-  },
-  { href: 'https://d10x.co/BingoBlitz/LLS1k', date: '2025-02-14' }
+  }
 ]
 HTML file saved to _includes/bingo-blitz.html
