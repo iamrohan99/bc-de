@@ -1,5 +1,17 @@
 Final links: [
   {
+    href: 'https://rewards.dicedreams.com/?handler=reward&link=dailygift240325',
+    date: '2025-03-25'
+  },
+  {
+    href: 'https://rewards.dicedreams.com/?handler=reward&link=dailygift2240424',
+    date: '2025-03-25'
+  },
+  {
+    href: 'https://rewards.dicedreams.com/?handler=reward&link=dailytomato23032025',
+    date: '2025-03-25'
+  },
+  {
     href: 'https://rewards.dicedreams.com/?handler=reward&link=phoenixfruit20032025',
     date: '2025-03-21'
   },
@@ -365,15 +377,6 @@ Final links: [
     date: '2025-01-18'
   },
   { href: 'https://d10x.co/dicedrems/giqcMU8Xp', date: '2025-01-18' },
-  { href: 'https://d10x.co/dicedrems/giq17Lhp4', date: '2025-01-18' },
-  { href: 'https://d10x.co/dicedrems/giqYUNVhT', date: '2025-01-18' },
-  {
-    href: 'https://rewards.dicedreams.com/?handler=reward&link=cybermonday021224',
-    date: '2025-01-18'
-  },
-  {
-    href: 'https://rewards.dicedreams.com/?handler=reward&link=BlackFridaytrail301124',
-    date: '2025-01-18'
-  }
+  { href: 'https://d10x.co/dicedrems/giq17Lhp4', date: '2025-01-18' }
 ]
 HTML file saved to _includes/dice-dreams.html
