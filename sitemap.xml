@@ -14,7 +14,9 @@ layout: null
     {% endif %}
   {% endfor %}
   {% for post in site.posts %}
-    {% assign filename = post.url | split: '/' | last | append: '.html' %}
+    {% assign slug = post.url | split: '/' | last %}
+    {% assign game = slug | split: '-' | first %}
+    {% assign filename = game | append: '.html' %}
     {% assign data_entry = site.data.include_files[filename] %}
     <url>
       <loc>{{ site.url }}{{ post.url }}</loc>
