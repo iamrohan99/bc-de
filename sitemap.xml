@@ -14,10 +14,10 @@ layout: null
     {% endif %}
   {% endfor %}
   {% for post in site.posts %}
-    {% assign filename = post.url | split: '/' | last %}
+    {% assign filename = post.url | split: '/' | last | append: '.html' %}
     {% assign data_entry = site.data.include_files[filename] %}
     <url>
-      <loc>{{ site.url }}{{ post.url | absolute_url }}</loc>
+      <loc>{{ site.url }}{{ post.url }}</loc>
       <lastmod>{{ data_entry.last_modified | default: post.date | date_to_xmlschema }}</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.8</priority>
