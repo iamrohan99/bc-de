@@ -1,5 +1,17 @@
 Finale Links: [
   {
+    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_FCBgIkghU_20250407',
+    date: '2025-04-07'
+  },
+  {
+    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_LINEaNurJf_20250407',
+    date: '2025-04-07'
+  },
+  {
+    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_TWIfjJjjP_20250407',
+    date: '2025-04-07'
+  },
+  {
     href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_EMAILzQMhTh_20250405',
     date: '2025-04-07'
   },
@@ -386,18 +398,6 @@ Finale Links: [
   {
     href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_RICHcVPgzu_20250302',
     date: '2025-03-25'
-  },
-  {
-    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_TWIpelHsL_20250324',
-    date: '2025-03-25'
-  },
-  {
-    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_HELPpltFgc_20250324',
-    date: '2025-03-25'
-  },
-  {
-    href: 'https://static.moonactive.net/static/coinmaster/reward/reward2.html?c=pe_EMAILYMixDr_20250328',
-    date: '2025-03-29'
   }
 ]
 HTML-Datei wurde gespeichert unter _includes/coin-master.html
