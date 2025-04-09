@@ -1,5 +1,21 @@
 Final links: [
   {
+    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1744109232404_7jed44dm',
+    date: '2025-04-09'
+  },
+  {
+    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1744109338996_067k6yy5',
+    date: '2025-04-09'
+  },
+  {
+    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1744140600061_n0lgj5ky',
+    date: '2025-04-09'
+  },
+  {
+    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1744142400197_n0lg4xgy',
+    date: '2025-04-09'
+  },
+  {
     href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1744054200030_3rzo8l4n',
     date: '2025-04-08'
   },
@@ -382,22 +398,6 @@ Final links: [
   {
     href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1742067000031_5jgox5wo',
     date: '2025-03-16'
-  },
-  {
-    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1742050800613_2gnzzdk6',
-    date: '2025-03-16'
-  },
-  {
-    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1741855829115_2gm69lk2',
-    date: '2025-03-15'
-  },
-  {
-    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1741993200093_deoj32kp',
-    date: '2025-03-15'
-  },
-  {
-    href: 'https://api.playtika.com/redirector/?coupon_token=1_3_1741993200057_2gmxx6om',
-    date: '2025-03-15'
   }
 ]
 HTML file saved to _includes/slotomania.html
