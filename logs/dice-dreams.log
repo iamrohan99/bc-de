@@ -1,5 +1,13 @@
 Final links: [
   {
+    href: 'https://rewards.dicedreams.com/?handler=reward&link=candylras10042025',
+    date: '2025-04-10'
+  },
+  {
+    href: 'https://rewards.dicedreams.com/?handler=reward&link=candylandgift10042025',
+    date: '2025-04-10'
+  },
+  {
     href: 'https://rewards.dicedreams.com/?handler=reward&link=purpleinfingojo09042025',
     date: '2025-04-10'
   },
@@ -390,14 +398,6 @@ Final links: [
   {
     href: 'https://rewards.dicedreams.com/?handler=reward&link=3daysleftforpet180125',
     date: '2025-01-19'
-  },
-  {
-    href: 'https://rewards.dicedreams.com/?handler=reward&link=adoptionweekend170125',
-    date: '2025-01-19'
-  },
-  {
-    href: 'https://rewards.dicedreams.com/?handler=reward&link=spotthedifference150125',
-    date: '2025-01-18'
   }
 ]
 HTML file saved to _includes/dice-dreams.html
